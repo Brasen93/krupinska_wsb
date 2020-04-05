@@ -20,7 +20,7 @@ const createTask = async (title) => (
       title
     }
 
-    servie.insertEntity(table, task, (error, result, response) => {
+    service.insertEntity(table, task, (error, result, response) => {
       !error ? resolve() : reject()
     })
   })
