@@ -1,3 +1,5 @@
+const tasks = require('./routes/tasks')
+app.use(tasks.routes(), tasks.allowedMethods())
 const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
