@@ -11,13 +11,14 @@ const init = async () => (
   })
 )
 
-const createTask = async (title) => (
+const createTask = async (title, description) => (
   new Promise((resolve, reject) => {
     const generator = storage.TableUtilities.entityGenerator
     const task = {
       PartitionKey: generator.String('task'),
       RowKey: generator.String(uuid.v4()),
       title,
+      description,
       status: 'open'
     }
 
@@ -30,13 +31,14 @@ const createTask = async (title) => (
 const listTasks = async () => (
   new Promise((resolve, reject) => {
     const query = new storage.TableQuery()
-      .select(['RowKey', 'title', 'status'])
+      .select(['RowKey', 'title','description', 'status'])
       .where('PartitionKey eq ?', 'task')
 
     service.queryEntities(table, query, null, (error, result, response) => {
       !error ? resolve(result.entries.map((entry) => ({
         id: entry.RowKey._,
         title: entry.title._,
+        description: entry.description._,
         status: entry.status._
       }))) : reject()
     })
