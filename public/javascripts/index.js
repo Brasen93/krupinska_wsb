@@ -10,3 +10,12 @@ const updateTaskStatus = (id, status) => {
       window.location = '/'
     })
   }
+
+const deleteTask = (id) => {
+    fetch('/tasks/deleteTask/' + id, {
+        method: 'delete'
+    })
+    .finally(() => {
+        window.location = '/'
+    })
+}
