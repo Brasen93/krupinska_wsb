@@ -19,7 +19,8 @@ const createTask = async (title, description) => (
       RowKey: generator.String(uuid.v4()),
       title,
       description,
-      status: 'open'
+      status: 'open',
+      date: generator.DateTime(new Date(Date.now()))
     }
 
     service.insertEntity(table, task, (error, result, response) => {
@@ -31,7 +32,7 @@ const createTask = async (title, description) => (
 const listTasks = async () => (
   new Promise((resolve, reject) => {
     const query = new storage.TableQuery()
-      .select(['RowKey', 'title','description', 'status', "lastModified"])
+      .select(['RowKey', 'title','description', 'status', 'date'])
       .where('PartitionKey eq ?', 'task')
 
     service.queryEntities(table, query, null, (error, result, response) => {
@@ -39,7 +40,8 @@ const listTasks = async () => (
         id: entry.RowKey._,
         title: entry.title._,
         description: entry.description._,
-        status: entry.status._
+        status: entry.status._,
+        date: entry.date._
       }))) : reject()
     })
   })
@@ -51,7 +53,8 @@ const updateTaskStatus = async (id, status) => (
     const task = {
       PartitionKey: generator.String('task'),
       RowKey: generator.String(id),
-      status
+      status,
+      date: generator.DateTime(new Date(Date.now()))
     }
 
     service.mergeEntity(table, task, (error, result, response) => {
@@ -60,15 +63,14 @@ const updateTaskStatus = async (id, status) => (
   })
 )
 
-const deleteTask = async (id) => (
+const deleteTask = async (partitionKey, rowKey) => (
     new Promise((resolve, reject) => {
-        const generator = storage.TableUtilities.entityGenerator
         const task = {
-            PartitionKey: generator.String('task'),
-            RowKey: generator.String(id)
+            PartitionKey: {'_' : partitionKey},
+            RowKey: {'_' : rowKey.toString()}
         }
 
-        service.mergeEntity(table, task, (error, result, response) => {
+        service.deleteEntity(table, task, (error, result, response) => {
             !error ? resolve() : reject()
         })
     })
