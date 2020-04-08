@@ -1,5 +1,3 @@
-import moment from "moment";
-
 const uuid = require('uuid')
 const storage = require('azure-storage')
 const service = storage.createTableService()
@@ -41,7 +39,7 @@ const listTasks = async () => (
         id: entry.RowKey._,
         title: entry.title._,
         description: entry.description._,
-        status: entry.status._,
+        status: entry.status._
       }))) : reject()
     })
   })
@@ -53,8 +51,7 @@ const updateTaskStatus = async (id, status) => (
     const task = {
       PartitionKey: generator.String('task'),
       RowKey: generator.String(id),
-      status,
-      lastModified: moment().toDate().getTime()
+      status
     }
 
     service.mergeEntity(table, task, (error, result, response) => {
