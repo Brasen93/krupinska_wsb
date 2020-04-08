@@ -21,7 +21,6 @@ const createTask = async (title, description) => (
       RowKey: generator.String(uuid.v4()),
       title,
       description,
-      lastModified: moment().toDate().getTime(),
       status: 'open'
     }
 
@@ -43,7 +42,6 @@ const listTasks = async () => (
         title: entry.title._,
         description: entry.description._,
         status: entry.status._,
-        lastModified: entry.lastModified._
       }))) : reject()
     })
   })
