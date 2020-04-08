@@ -11,8 +11,8 @@ const updateTaskStatus = (id, status) => {
     })
   }
 
-const deleteTask = (id) => {
-    fetch('/tasks/deleteTask/' + id, {
+const deleteTask = () => {
+    fetch('/tasks/deleteTask/', {
         method: 'delete'
     })
     .finally(() => {
